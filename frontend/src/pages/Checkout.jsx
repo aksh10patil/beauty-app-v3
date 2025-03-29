@@ -28,7 +28,7 @@ const Checkout = ({ cart = [], setCart }) => {
 
   const whatsapplink = () => {
     // Replace with the actual business phone number (include country code)
-    const phoneNumber = '7225010093'; // Example: use your actual business phone number
+    const phoneNumber = '7906427874'; // Example: use your actual business phone number
     
     // Optional: Customize the default message
     const message = encodeURIComponent('Hello, I would like to get more information.');
