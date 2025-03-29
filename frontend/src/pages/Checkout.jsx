@@ -25,22 +25,30 @@ const Checkout = ({ cart = [], setCart }) => {
     return cart.reduce((total, item) => total + item.price, 0);
   };
 
+  const [savedCartItems, setSavedCartItems] = useState([]);
+  const [savedTotal, setSavedTotal] = useState(0);
 
-  const whatsapplink = () => {
-    // Replace with the actual business phone number (include country code)
-    const phoneNumber = '7906427874'; // Example: use your actual business phone number
-    
-    // Optional: Customize the default message
-    const message = encodeURIComponent('Hello, I would like to get more information.');
-    
-    // Construct WhatsApp web URL
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-    
-    // Open WhatsApp in a new tab
-    window.open(whatsappUrl, '_blank');
-  };
-
+const whatsapplink = () => {
+  const phoneNumber = '7225010093';
   
+  // Use saved cart items instead of current cart
+  const cartItems = savedCartItems.length > 0 
+    ? savedCartItems.map(item => `${item.serviceName} - ${item.optionName} (₹${item.price})`).join(', ')
+    : "No items";
+  
+  const message = encodeURIComponent(
+    `Hi, I want to make a Booking request:\n` +
+    `Name: ${formData.name}\n` +
+    `Phone: ${formData.phone}\n` +
+    `Date: ${formData.date}, Time: ${formData.time}\n` +
+    `Items: ${cartItems}\n` +
+    `Total: ₹${savedTotal}\n` +
+    `Notes: ${formData.notes || 'None'}`
+  );
+  
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+  window.open(whatsappUrl, '_blank');
+};
 
   const validateForm = () => {
     const newErrors = {};
@@ -145,6 +153,10 @@ const Checkout = ({ cart = [], setCart }) => {
   };
 
   const completeBooking = () => {
+      // Save cart items and total before clearing the cart
+      setSavedCartItems([...cart]);
+      setSavedTotal(getCartTotal());
+
     setIsSubmitting(false);
     setSubmitted(true);
     // Clear cart after successful submission
@@ -202,9 +214,9 @@ const Checkout = ({ cart = [], setCart }) => {
               </p>
               <h3 className="font-medium mt-4 mb-2">Services booked:</h3>
               <ul className="list-disc pl-5">
-                {cart.map(item => (
+                {savedCartItems.map(item => (
                   <li key={item.id}>
-                    {item.serviceName} - {item.optionName} (${item.price})
+                    {item.serviceName} - {item.optionName} (₹{item.price})
                   </li>
                 ))}
               </ul>
@@ -429,7 +441,5 @@ const Checkout = ({ cart = [], setCart }) => {
     </>
   );
 };
-
-
 
 export default Checkout;
