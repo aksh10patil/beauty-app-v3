@@ -38,7 +38,7 @@ function Footer() {
                         <p className="mt-3 text-lg font-semibold text-green-700">
                             +91-7906427874
                         </p>
-                        <p className="text-gray-600">info@beautyathome.co.in</p>
+                        <p className="text-gray-600">booking@beautyathome.co.in</p>
 
                         <div className="flex space-x-4 mt-4">
 
