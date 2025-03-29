@@ -3,18 +3,18 @@ import abovefooter from '../assets/abovefooter.webp';
 export default function BeautyGlowUp() {
     return (
         <div>
-            <div className="flex flex-col md:flex-row items-center justify-between h-screen">
+            <div className="flex flex-col md:flex-row items-center justify-between">
                 {/* Left - Image Section */}
-                <div className="md:w-1/2 w-full h-full">
+                <div className="md:w-1/2 w-full">
                     <img
                         src={abovefooter} 
                         alt="Salon Welcome"
-                        className="w-full h-full object-cover"
+                        className="w-full object-cover"
                     />
                 </div>
         
                 {/* Right - Text Section */}
-                <div className="md:w-1/2 w-full h-full bg-[#6D7154] text-white p-10 md:p-20 flex flex-col justify-center">
+                <div className="md:w-1/2 w-full bg-[#6D7154] text-white p-10 md:p-20 flex flex-col justify-center">
                     <h1 className="text-4xl md:text-5xl font-serif leading-tight text-white">
                         Exclusive all-in-one glow up beauty <br />
                         <span className="italic text-pink-300">packages</span>
