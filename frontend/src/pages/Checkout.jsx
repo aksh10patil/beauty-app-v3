@@ -29,7 +29,7 @@ const Checkout = ({ cart = [], setCart }) => {
   const [savedTotal, setSavedTotal] = useState(0);
 
 const whatsapplink = () => {
-  const phoneNumber = '7225010093';
+  const phoneNumber = '7906427874';
   
   // Use saved cart items instead of current cart
   const cartItems = savedCartItems.length > 0 
