@@ -1,83 +1,107 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { ShoppingCart, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+// Default packages data as fallback
+const defaultPackages = [
+    {
+        id: 1,
+        name: "Normal Package",
+        description: "Basic treatment options for those who want essential services.",
+        price: 2500,
+        image: "/api/placeholder/400/300",
+        color: "blue",
+        features: [
+            "EyeBrow",
+            "Upperlip",
+            "Hand massage",
+            "Normal Wax (Full Hand)",
+            "Face bleach",
+            "Facial (Twacha / KYC)",
+        ]
+    },
+    {
+        id: 2,
+        name: "Medium Package",
+        description: "Enhanced services with more options and premium products.",
+        price: 3500,
+        image: "/api/placeholder/400/300",
+        color: "green",
+        features: [
+            "EyeBrow",
+            "Upperlip",
+            "Dry Manicure",
+            "Wax (Full hand)",
+            "Head Message (Oil)",
+            "D-tan",
+            "Facial (O3)",
+        ],
+        isPopular: true
+    },
+    {
+        id: 3,
+        name: "High Package",
+        description: "Luxury treatment with extensive options and top-tier products.",
+        price: 6000,
+        image: "/api/placeholder/400/300",
+        color: "purple",
+        features: [
+            "EyeBrow",
+            "Upperlip",
+            "Dry Manicure",
+            "Hair Trimming",
+            "Head Message (Oil)",
+            "D-tan (half hand & leg)",
+            "D-tan (face)",
+            "Facial (hydra)",
+        ]
+    },
+    {
+        id: 4,
+        name: "Bridal Package",
+        description: "Complete bridal service with everything needed for your special day.",
+        price: 7500,
+        image: "/api/placeholder/400/300",
+        color: "pink",
+        features: [
+            "EyeBrow",
+            "Upperlip (Ricewax)",
+            "Forehead (Ricewax)",
+            "Hair Trimming",
+            "Head Message (Oil)",
+            "D-tan (half hand & leg)",
+            "Face Bleach (O3)",
+            "Facial (casmara / blossom / kanpeki)",
+        ]
+    }
+];
+
 const Packages = ({ cart = [], setCart }) => {
     const navigate = useNavigate();
-    const [isCartOpen, setIsCartOpen] = React.useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const [packages, setPackages] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const packages = [
-        {
-            id: 1,
-            name: "Normal Package",
-            description: "Basic treatment options for those who want essential services.",
-            price: "₹2500",
-            color: "blue",
-            features: [
-                "EyeBrow",
-                "Upperlip",
-                "Hand massage",
-                "Normal Wax (Full Hand)",
-                "Face bleach",
-                "Facial (Twacha / KYC)",
-                
-            ]
-        },
-        {
-            id: 2,
-            name: "Medium Package",
-            description: "Enhanced services with more options and premium products.",
-            price: "₹3500",
-            color: "green",
-            features: [
-               "EyeBrow",
-                "Upperlip",
-                "Dry Manicure",
-                "Wax (Full hand)",
-                "Head Message (Oil)",
-                "D-tan",
-                "Facial (O3)",
-            ],
-            isPopular: true
-        },
-        {
-            id: 3,
-            name: "High Package",
-            description: "Luxury treatment with extensive options and top-tier products.",
-            price: "₹6000",
-            color: "purple",
-            features: [
-               "EyeBrow",
-                "Upperlip",
-                "Dry Manicure",
-                "Hair Trimming",
-                "Head Message (Oil)",
-                "D-tan (half hand & leg)",
-                "D-tan (face)",
-                "Facial (hydra)",
-            ]
-        },
-        {
-            id: 4,
-            name: "Bridal Package",
-            description: "Complete bridal service with everything needed for your special day.",
-            price: "₹7500",
-            color: "pink",
-            features: [
-                "EyeBrow",
-                "Upperlip (Ricewax)",
-                "Forehead (Ricewax)",
-                "Hair Trimming",
-                "Head Message (Oil)",
-                "D-tan (half hand & leg)",
-                "Face Bleach (O3)",
-                "Facial (casmara / blossom / kanpeki)",
-
-            ]
+    // Load packages from localStorage (if available) or use defaults
+    useEffect(() => {
+        try {
+            const savedPackages = localStorage.getItem('spaPackages');
+            if (savedPackages) {
+                setPackages(JSON.parse(savedPackages));
+            } else {
+                setPackages(defaultPackages);
+                // Save default packages to localStorage for first-time setup
+                localStorage.setItem('spaPackages', JSON.stringify(defaultPackages));
+            }
+        } catch (error) {
+            console.error("Error loading packages:", error);
+            setPackages(defaultPackages);
+        } finally {
+            setIsLoading(false);
         }
-    ];
+    }, []);
 
     const getColorClasses = (color) => {
         const classes = {
@@ -114,7 +138,7 @@ const Packages = ({ cart = [], setCart }) => {
             id: `package-${pkg.id}`,
             serviceName: `${pkg.name} Package`,
             optionName: "Complete Package",
-            price: parseFloat(pkg.price.replace('₹', ''))
+            price: pkg.price
         };
         setCart((prevCart) => [...prevCart, cartItem]);
         setIsCartOpen(false);
@@ -133,11 +157,13 @@ const Packages = ({ cart = [], setCart }) => {
         navigate('/checkout');
     };
 
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center">Loading packages...</div>;
+    }
+
     return (
         <>
-            <Header />
             <div className="min-h-screen bg-gray-50">
-                {/* Page Header */}
                 <section className="bg-pink-100 py-16 text-center">
                     <h1 className="text-4xl font-bold text-gray-800">Our Packages</h1>
                     <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto px-4">
@@ -145,24 +171,28 @@ const Packages = ({ cart = [], setCart }) => {
                     </p>
                 </section>
 
-                {/* Packages Container */}
-                <section className="py-16 px-4 overflow-x-auto">
-                    <div className="max-w-6xl mx-auto flex flex-row space-x-6 min-w-max pb-6">
+                <section className="max-w-6xl mx-auto py-16 px-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {packages.map(pkg => {
                             const colorClasses = getColorClasses(pkg.color);
                             return (
                                 <article 
                                     key={pkg.id} 
-                                    className={`w-72 bg-white rounded-lg shadow-md overflow-hidden transition transform hover:-translate-y-1 hover:shadow-lg relative ${pkg.isPopular ? `border-t-4 ${colorClasses.border}` : ''}`}
+                                    className={`bg-white rounded-lg shadow-md overflow-hidden transition transform hover:-translate-y-1 hover:shadow-lg relative ${pkg.isPopular ? `border-t-4 ${colorClasses.border}` : ''}`}
                                 >
                                     {pkg.isPopular && (
                                         <div className="absolute top-0 right-0 bg-yellow-400 text-xs font-bold uppercase py-1 px-4 transform rotate-45 translate-x-7 translate-y-3 text-gray-800">
                                             Most Popular
                                         </div>
                                     )}
+                                    <img
+                                        src={pkg.image}
+                                        alt={pkg.name}
+                                        className="w-full h-48 object-cover"
+                                    />
                                     <div className="p-6">
                                         <h2 className={`text-2xl font-bold mb-2 ${colorClasses.text}`}>{pkg.name}</h2>
-                                        <div className="text-3xl font-bold my-4">{pkg.price}</div>
+                                        <div className="text-3xl font-bold my-4">₹{pkg.price}</div>
                                         <p className="text-gray-600 mb-6">{pkg.description}</p>
 
                                         <h3 className="text-lg font-semibold text-gray-700 mb-3">Features</h3>
@@ -260,7 +290,6 @@ const Packages = ({ cart = [], setCart }) => {
                     )}
                 </button>
             </div>
-            <Footer />
         </>
     );
 };
