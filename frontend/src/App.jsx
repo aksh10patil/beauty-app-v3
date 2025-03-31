@@ -7,6 +7,9 @@ import Services from "./pages/Services";
 import Checkout from "./pages/Checkout";
 import Packages from  "./pages/Packages";
 import Contact from "./pages/Contact";
+import AdminPanel from './pages/AdminPanel';
+
+
 
 export default function App() {
   const [cart, setCart] = useState([]);
@@ -17,6 +20,7 @@ export default function App() {
 
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/adminbeauty12" element={<AdminPanel />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/Appointment" element={<Appointment />} />
             <Route path="/Contact" element={<Contact />} />
