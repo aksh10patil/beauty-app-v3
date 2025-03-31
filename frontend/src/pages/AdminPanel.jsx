@@ -11,12 +11,60 @@ const AdminPanel = () => {
   const [expandedPackage, setExpandedPackage] = useState(null);
   const [statusMessage, setStatusMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [isLocalStorageAvailable, setIsLocalStorageAvailable] = useState(false);
+
+  // Check if localStorage is available
+  useEffect(() => {
+    try {
+      localStorage.setItem('test', 'test');
+      localStorage.removeItem('test');
+      setIsLocalStorageAvailable(true);
+    } catch (e) {
+      setIsLocalStorageAvailable(false);
+      showMessage('LocalStorage is not available. Changes will not be saved.', 'error');
+    }
+  }, []);
 
   // Load all data on component mount
   useEffect(() => {
-    loadServices();
-    loadPackages();
-  }, []);
+    if (isLocalStorageAvailable) {
+      loadServices();
+      loadPackages();
+    } else {
+      // Set default data if localStorage is not available
+      setDefaultData();
+    }
+  }, [isLocalStorageAvailable]);
+
+  // Set default data when localStorage is not available
+  const setDefaultData = () => {
+    setServices([
+      {
+        id: 'service-1',
+        name: 'Sample Service',
+        description: 'This is a sample service description.',
+        image: 'https://via.placeholder.com/400x300',
+        options: [
+          {
+            id: 'option-1',
+            name: 'Standard Option',
+            price: 1000
+          }
+        ]
+      }
+    ]);
+    
+    setPackages([
+      {
+        id: 'package-1',
+        name: 'Sample Package',
+        description: 'This is a sample package description.',
+        image: 'https://via.placeholder.com/400x300',
+        price: 2500,
+        services: []
+      }
+    ]);
+  };
 
   // Load services from localStorage
   const loadServices = () => {
@@ -24,9 +72,27 @@ const AdminPanel = () => {
       const savedServices = localStorage.getItem('spaServices');
       if (savedServices) {
         setServices(JSON.parse(savedServices));
+      } else {
+        // If no services found in localStorage, set a default one
+        setServices([
+          {
+            id: 'service-1',
+            name: 'Sample Service',
+            description: 'This is a sample service description.',
+            image: 'https://via.placeholder.com/400x300',
+            options: [
+              {
+                id: 'option-1',
+                name: 'Standard Option',
+                price: 1000
+              }
+            ]
+          }
+        ]);
       }
     } catch (error) {
       showMessage(`Error loading services: ${error.message}`, 'error');
+      setDefaultData();
     }
   };
 
@@ -36,14 +102,32 @@ const AdminPanel = () => {
       const savedPackages = localStorage.getItem('spaPackages');
       if (savedPackages) {
         setPackages(JSON.parse(savedPackages));
+      } else {
+        // If no packages found in localStorage, set a default one
+        setPackages([
+          {
+            id: 'package-1',
+            name: 'Sample Package',
+            description: 'This is a sample package description.',
+            image: 'https://via.placeholder.com/400x300',
+            price: 2500,
+            services: []
+          }
+        ]);
       }
     } catch (error) {
       showMessage(`Error loading packages: ${error.message}`, 'error');
+      setDefaultData();
     }
   };
 
   // Save services to localStorage
   const saveServices = () => {
+    if (!isLocalStorageAvailable) {
+      showMessage('LocalStorage is not available. Changes cannot be saved.', 'error');
+      return;
+    }
+    
     try {
       localStorage.setItem('spaServices', JSON.stringify(services));
       showMessage('Services saved successfully!', 'success');
@@ -54,6 +138,11 @@ const AdminPanel = () => {
 
   // Save packages to localStorage
   const savePackages = () => {
+    if (!isLocalStorageAvailable) {
+      showMessage('LocalStorage is not available. Changes cannot be saved.', 'error');
+      return;
+    }
+    
     try {
       localStorage.setItem('spaPackages', JSON.stringify(packages));
       showMessage('Packages saved successfully!', 'success');
@@ -94,7 +183,7 @@ const AdminPanel = () => {
       id: `service-${Date.now()}`,
       name: 'New Service',
       description: 'Service description',
-      image: '/api/placeholder/400/300',
+      image: 'https://via.placeholder.com/400x300',
       options: [
         {
           id: `option-${Date.now()}`,
@@ -147,7 +236,7 @@ const AdminPanel = () => {
           if (option.id === optionId) {
             // If field is price, ensure it's a number
             if (field === 'price') {
-              return { ...option, [field]: Number(value) };
+              return { ...option, [field]: Number(value) || 0 };
             }
             return { ...option, [field]: value };
           }
@@ -195,7 +284,7 @@ const AdminPanel = () => {
       id: `package-${Date.now()}`,
       name: 'New Package',
       description: 'Package description',
-      image: '/api/placeholder/400/300',
+      image: 'https://via.placeholder.com/400x300',
       price: 2500,
       services: []
     };
@@ -209,7 +298,7 @@ const AdminPanel = () => {
       if (pkg.id === id) {
         // Ensure price is a number
         if (field === 'price') {
-          return { ...pkg, [field]: Number(value) };
+          return { ...pkg, [field]: Number(value) || 0 };
         }
         return { ...pkg, [field]: value };
       }
@@ -228,22 +317,33 @@ const AdminPanel = () => {
     }
   };
 
-  // Handle image upload (mock functionality - would connect to actual upload in production)
+  // Handle image upload (modified to use base64 images that can be stored in localStorage)
   const handleImageUpload = (e, id, type) => {
     const file = e.target.files[0];
     if (file) {
-      // In a real implementation, this would upload to a server
-      // For demo purposes, we'll use a local URL
-      const imageUrl = URL.createObjectURL(file);
-      
-      if (type === 'service') {
-        updateService(id, 'image', imageUrl);
-      } else if (type === 'package') {
-        updatePackage(id, 'image', imageUrl);
-      }
-      
-      showMessage('Image updated! (Note: This is a temporary URL for demo purposes)', 'success');
+      // Read file as data URL (base64)
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Image = reader.result;
+        
+        if (type === 'service') {
+          updateService(id, 'image', base64Image);
+        } else if (type === 'package') {
+          updatePackage(id, 'image', base64Image);
+        }
+        
+        showMessage('Image updated successfully!', 'success');
+      };
+      reader.onerror = () => {
+        showMessage('Error reading image file', 'error');
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  // Handle image errors
+  const handleImageError = (e) => {
+    e.target.src = 'https://via.placeholder.com/400x300';
   };
 
   return (
@@ -258,6 +358,13 @@ const AdminPanel = () => {
             {statusMessage && (
               <div className={`mb-6 p-4 rounded-md ${messageType === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                 {statusMessage}
+              </div>
+            )}
+
+            {/* LocalStorage warning */}
+            {!isLocalStorageAvailable && (
+              <div className="mb-6 p-4 rounded-md bg-yellow-100 text-yellow-700">
+                Warning: LocalStorage is not available in this environment. Your changes will not be saved between page refreshes.
               </div>
             )}
 
@@ -324,6 +431,7 @@ const AdminPanel = () => {
                                 src={service.image} 
                                 alt={service.name} 
                                 className="h-10 w-10 object-cover rounded-md mr-2"
+                                onError={handleImageError}
                               />
                               <label className="bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md cursor-pointer hover:bg-gray-300 flex items-center">
                                 <ImageIcon size={16} className="mr-1" />
@@ -503,6 +611,7 @@ const AdminPanel = () => {
                               src={pkg.image} 
                               alt={pkg.name} 
                               className="h-16 w-16 object-cover rounded-md mr-2"
+                              onError={handleImageError}
                             />
                             <label className="bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md cursor-pointer hover:bg-gray-300 flex items-center">
                               <Upload size={16} className="mr-1" />
