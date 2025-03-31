@@ -63,6 +63,7 @@ const Services = ({ cart = [], setCart }) => {
 
     return (
         <>
+            <Header />
             <div className="min-h-screen bg-gray-50">
                 <section className="bg-pink-100 py-16 text-center">
                     <h1 className="text-4xl font-bold text-gray-800">Our Services</h1>
@@ -182,6 +183,7 @@ const Services = ({ cart = [], setCart }) => {
                     )}
                 </button>
             </div>
+            <Footer />
         </>
     );
 };
