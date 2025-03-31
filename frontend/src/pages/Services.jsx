@@ -1,56 +1,39 @@
 import Header from './components/Header';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from './components/Footer';
-import { ShoppingCart, Plus } from 'lucide-react';
+import { ShoppingCart, Plus, Package2, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import pcarousel5 from '../assets/pcarousel5.webp';
-import pcarousel2 from '../assets/pcarousel2.webp';
-import bodymassagepg from '../assets/bodymassagepg.webp';
+import Packages from './Packages';
+
+// Import default services data as a fallback
+import { defaultServices } from './defaultServicesData';
 
 const Services = ({ cart = [], setCart }) => {
     const navigate = useNavigate();
-    const [isCartOpen, setIsCartOpen] = React.useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const [services, setServices] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const services = [
-        {
-            id: 1,
-            name: "Hair Styling",
-            description: "Professional hair styling services for all hair types and preferences.",
-            image: pcarousel5,
-            options: [
-                { id: 101, name: "Women's Haircut", price: 65 },
-                { id: 102, name: "Men's Haircut", price: 45 },
-                { id: 103, name: "Color & Highlights", price: 120 },
-                { id: 104, name: "Blowout & Styling", price: 55 },
-            ]
-        },
-        {
-            id: 2,
-            name: "Facial Massage",
-            description: "Rejuvenating facial treatments to refresh and revitalize your skin.",
-            image: pcarousel2,
-            options: [
-                { id: 201, name: "Classic Facial", price: 80 },
-                { id: 202, name: "Anti-Aging Treatment", price: 110 },
-                { id: 203, name: "Hydrating Facial", price: 95 },
-                { id: 204, name: "Deep Cleansing", price: 85 },
-            ]
-        },
-        {
-            id: 3,
-            name: "Body Massage",
-            description: "Therapeutic massage treatments to relieve stress and tension.",
-            image: bodymassagepg,
-            options: [
-                { id: 301, name: "Swedish Massage (60 min)", price: 90 },
-                { id: 302, name: "Deep Tissue (60 min)", price: 110 },
-                { id: 303, name: "Hot Stone Massage", price: 130 },
-                { id: 304, name: "Aromatherapy Massage", price: 100 },
-            ]
+    // Load services from localStorage (if available) or use defaults
+    useEffect(() => {
+        try {
+            const savedServices = localStorage.getItem('spaServices');
+            if (savedServices) {
+                setServices(JSON.parse(savedServices));
+            } else {
+                setServices(defaultServices);
+                // Save default services to localStorage for first-time setup
+                localStorage.setItem('spaServices', JSON.stringify(defaultServices));
+            }
+        } catch (error) {
+            console.error("Error loading services:", error);
+            setServices(defaultServices);
+        } finally {
+            setIsLoading(false);
         }
-    ];
+    }, []);
 
-    const addToCart = React.useCallback((service, option) => {
+    const addToCart = (service, option) => {
         const cartItem = {
             id: `${service.id}-${option.id}`,
             serviceName: service.name,
@@ -58,34 +41,36 @@ const Services = ({ cart = [], setCart }) => {
             price: option.price
         };
         setCart((prevCart) => [...prevCart, cartItem]);
-        setIsCartOpen(false);
-    }, [setCart]);
+        setIsCartOpen(true); // Open cart when item is added
+    };
 
-    const removeFromCart = React.useCallback((itemId) => {
+    const removeFromCart = (itemId) => {
         setCart((prevCart) => prevCart.filter(item => item.id !== itemId));
-    }, [setCart]);
+    };
 
-    const getCartTotal = React.useCallback(() => {
+    const getCartTotal = () => {
         return cart.reduce((total, item) => total + item.price, 0);
-    }, [cart]);
+    };
 
     const handleCheckout = () => {
         setIsCartOpen(false);
         navigate('/checkout');
     };
 
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center">Loading services...</div>;
+    }
+
     return (
         <>
             <Header />
             <div className="min-h-screen bg-gray-50">
-
                 <section className="bg-pink-100 py-16 text-center">
                     <h1 className="text-4xl font-bold text-gray-800">Our Services</h1>
                     <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto px-4">
                         Indulge in our premium beauty and wellness services designed to enhance your natural beauty
                     </p>
                 </section>
-
 
                 <section className="max-w-6xl mx-auto py-16 px-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -110,7 +95,7 @@ const Services = ({ cart = [], setCart }) => {
                                                     <button
                                                         onClick={() => addToCart(service, option)}
                                                         className="bg-pink-500 text-white p-1 rounded-full hover:bg-pink-600 transition"
-                                                        aria-label={`Add ₹{option.name} to cart`}
+                                                        aria-label={`Add ${option.name} to cart`}
                                                     >
                                                         <Plus size={16} />
                                                     </button>
@@ -124,8 +109,11 @@ const Services = ({ cart = [], setCart }) => {
                     </div>
                 </section>
 
+                {/* Packages section */}
+                <Packages cart={cart} setCart={setCart} />
 
-                <div className={`fixed right-0 top-0 h-full w-80 bg-white shadow-lg transform transition-transform ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                {/* Cart sidebar */}
+                <div className={`fixed right-0 top-0 h-full w-80 bg-white shadow-lg transform transition-transform z-50 ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                     <div className="p-4 bg-pink-500 text-white flex justify-between items-center">
                         <h2 className="text-xl font-bold flex items-center">
                             <ShoppingCart className="mr-2" size={20} />
@@ -181,9 +169,9 @@ const Services = ({ cart = [], setCart }) => {
                     </div>
                 </div>
 
-
+                {/* Cart button */}
                 <button
-                    className="fixed bottom-6 right-6 bg-pink-500 text-white p-3 rounded-full shadow-lg hover:bg-pink-600 transition flex items-center justify-center"
+                    className="fixed bottom-6 right-6 bg-pink-500 text-white p-3 rounded-full shadow-lg hover:bg-pink-600 transition flex items-center justify-center z-40"
                     onClick={() => setIsCartOpen(!isCartOpen)}
                     aria-label="Open cart"
                 >
@@ -200,4 +188,4 @@ const Services = ({ cart = [], setCart }) => {
     );
 };
 
-export default React.memo(Services);
+export default Services;
