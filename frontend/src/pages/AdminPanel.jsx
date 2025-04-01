@@ -369,26 +369,26 @@ const AdminPanel = () => {
             )}
 
             {/* Services Section */}
-            <div className="mb-12">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-700">Services</h2>
-                <div className="flex space-x-2">
-                  <button 
-                    onClick={addService}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center hover:bg-blue-600 transition"
-                  >
-                    <PlusCircle size={18} className="mr-1" />
-                    Add Service
-                  </button>
-                  <button 
-                    onClick={saveServices}
-                    className="bg-green-500 text-white px-4 py-2 rounded-md flex items-center hover:bg-green-600 transition"
-                  >
-                    <Save size={18} className="mr-1" />
-                    Save All Services
-                  </button>
-                </div>
-              </div>
+                  <div className="mb-12">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <h2 className="text-2xl font-bold text-gray-700">Services</h2>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button 
+                onClick={addService}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center justify-center hover:bg-blue-600 transition w-full sm:w-auto"
+              >
+                <PlusCircle size={18} className="mr-1" />
+                Add Service
+              </button>
+              <button 
+                onClick={saveServices}
+                className="bg-green-500 text-white px-4 py-2 rounded-md flex items-center justify-center hover:bg-green-600 transition w-full sm:w-auto"
+              >
+                <Save size={18} className="mr-1" />
+                Save All Services
+              </button>
+            </div>
+          </div>
               
               <div className="space-y-4">
                 {services.map(service => (
@@ -529,25 +529,25 @@ const AdminPanel = () => {
             
             {/* Packages Section */}
             <div>
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-700">Packages</h2>
-                <div className="flex space-x-2">
-                  <button 
-                    onClick={addPackage}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center hover:bg-blue-600 transition"
-                  >
-                    <PlusCircle size={18} className="mr-1" />
-                    Add Package
-                  </button>
-                  <button 
-                    onClick={savePackages}
-                    className="bg-green-500 text-white px-4 py-2 rounded-md flex items-center hover:bg-green-600 transition"
-                  >
-                    <Save size={18} className="mr-1" />
-                    Save All Packages
-                  </button>
-                </div>
-              </div>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+      <h2 className="text-2xl font-bold text-gray-700">Packages</h2>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <button 
+          onClick={addPackage}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center justify-center hover:bg-blue-600 transition w-full sm:w-auto"
+        >
+          <PlusCircle size={18} className="mr-1" />
+          Add Package
+        </button>
+        <button 
+          onClick={savePackages}
+          className="bg-green-500 text-white px-4 py-2 rounded-md flex items-center justify-center hover:bg-green-600 transition w-full sm:w-auto"
+        >
+          <Save size={18} className="mr-1" />
+          Save All Packages
+        </button>
+      </div>
+    </div>
               
               <div className="space-y-4">
                 {packages.map(pkg => (
