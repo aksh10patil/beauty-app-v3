@@ -107,11 +107,11 @@ const whatsapplink = () => {
       const { id: order_id } = orderResponse.data;
 
       const options = {
-        key: "rzp_test_G5uv0PRAgoyYhd", // Replace with your Razorpay key
+        key: "rzp_live_UyjOJwt1fAn3qk", // Replace with your Razorpay key
         amount: total * 100, // Amount in paise
         currency: "INR",
-        name: "Your Company Name",
-        description: "Test Transaction",
+        name: "Beauty At Home",
+        description: "Transaction Intiating",
         order_id: order_id,
         handler: async function (response) {
           try {
