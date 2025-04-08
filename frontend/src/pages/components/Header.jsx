@@ -28,7 +28,6 @@ export default function BeautySalonHeader() {
           </Link>
           <Link to="/Blog" className="text-white font-medium">Blog</Link>
           <Link to="/Appointment" className="text-white font-medium">Appointment</Link>
-          <Link to="/Packages" className="text-white font-medium">Packages</Link>
         </div>
 
         <div className="hidden md:flex items-center space-x-6">
