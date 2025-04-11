@@ -9,7 +9,7 @@ import ServiceList from './ServiceList'
 import Abovefooter from './Abovefooter'
 import { Link } from 'react-router-dom';
 import Header from './components/Header';
-import Packages from './Packages';
+// import Packages from './Packages';
 import Footer from './components/Footer';
 
 
