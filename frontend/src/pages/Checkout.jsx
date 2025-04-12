@@ -98,8 +98,9 @@ const whatsapplink = () => {
 
     try {
       // Create order
-      //import env here backend - render 
-      const orderResponse = await axios.post(import.meta.env.VITE_BACKEND_URL + '/create-order', {
+      //import env here backend - render  
+      // using localhost 4000 to run locally 
+      const orderResponse = await axios.post( 'http://localhost:4000/api'  + '/create-order', {
         courseId: Math.floor(Math.random() * 10), // You can modify this as needed
         amount: total
       });
@@ -116,7 +117,7 @@ const whatsapplink = () => {
         handler: async function (response) {
           try {
             // Verify payment
-            const verifyResponse = await axios.post(import.meta.env.VITE_BACKEND_URL + '/verifyPayment', {
+            const verifyResponse = await axios.post( 'http://localhost:4000/api'  + '/verifyPayment', {
               order_id: order_id,
               payment_Id: response.razorpay_payment_id,
               signature: response.razorpay_signature
@@ -152,16 +153,52 @@ const whatsapplink = () => {
     }
   };
 
-  const completeBooking = () => {
-      // Save cart items and total before clearing the cart
-      setSavedCartItems([...cart]);
-      setSavedTotal(getCartTotal());
+  const completeBooking = async () => {
+  try {
+    // Prepare booking data
+    const bookingData = {
+      customer: {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone
+      },
+      appointment: {
+        date: formData.date,
+        time: formData.time,
+        notes: formData.notes
+      },
+      services: cart.map(item => ({
+        serviceName: item.serviceName,
+        optionName: item.optionName,
+        price: item.price
+      })),
+      total: getCartTotal(),
+      paymentMethod: formData.paymentMethod,
+      status: 'pending'
+    };
+
+    // Save booking to database
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/bookings`, bookingData);
+    
+    // If successful, update UI
+    console.log('Booking saved:', response.data);
+    
+    // Save cart items and total before clearing the cart
+    setSavedCartItems([...cart]);
+    setSavedTotal(getCartTotal());
 
     setIsSubmitting(false);
     setSubmitted(true);
+    
     // Clear cart after successful submission
     if (setCart) setCart([]);
-  };
+    
+  } catch (error) {
+    console.error('Error saving booking:', error);
+    alert("Booking completed but there was an error saving your details. Please contact support.");
+    setIsSubmitting(false);
+  }
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
