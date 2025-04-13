@@ -21,7 +21,7 @@ const AdminPanel = () => {
       // Get the token from localStorage or wherever you store it after admin login
       const token = localStorage.getItem('adminToken');
       
-      const response = await axios.get(`${import.meta.env.NEW_BACKEND_URL_V}/bookings`,
+      const response = await axios.get('https://beauty-app-v3-9yge.onrender.com//bookings',
           
         //`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/bookings`, 
         {
@@ -54,7 +54,7 @@ const AdminPanel = () => {
       const token = localStorage.getItem('adminToken');
       
       await axios.put(
-        `${import.meta.env.NEW_BACKEND_URL_V}/bookings/${id}`, 
+        `https://beauty-app-v3-9yge.onrender.com/bookings/${id}`, 
         { status },
         {
           headers: {
