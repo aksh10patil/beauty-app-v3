@@ -180,7 +180,7 @@ const whatsapplink = () => {
     };
 
     // Save booking to database
-    const response = await axios.post( 'https://beauty-app-v3-9yge.onrender.com//bookings', bookingData);
+    const response = await axios.post( 'https://beauty-app-v3-9yge.onrender.com/bookings', bookingData);
     
     // If successful, update UI
     console.log('Booking saved:', response.data);
