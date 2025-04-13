@@ -17,41 +17,59 @@ const AdminPanel = () => {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-     // const response = await axios.get(import.meta.env.VITE_BACKEND_URL + '/bookings');
-     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/bookings`);
       
-      // Check if response.data is an array before setting state
+      // Get the token from localStorage or wherever you store it after admin login
+      const token = localStorage.getItem('adminToken');
+      
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/bookings`,
+          
+        //`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/bookings`, 
+        {
+          headers: {
+            'x-auth-token': token
+          }
+        }
+      );
+      
       if (Array.isArray(response.data)) {
         setBookings(response.data);
       } else {
         console.error('Expected array but got:', response.data);
-        // If we received an error object instead of bookings array
-        if (response.data && response.data.message) {
-          setError(response.data.message);
-        } else {
-          setError('Received unexpected data format from server');
-        }
-        setBookings([]); // Initialize with empty array
+        setError('Received unexpected data format from server');
+        setBookings([]);
       }
     } catch (err) {
+      console.error('Error fetching bookings:', err.response?.data || err.message);
       setError('Failed to fetch bookings. Please try again.');
-      console.error('Error fetching bookings:', err);
-      setBookings([]); // Reset to empty array on error
+      setBookings([]);
     } finally {
       setLoading(false);
     }
   };
 
+
   const updateBookingStatus = async (id, status) => {
     try {
-      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/bookings/${id}`, { status });
+      // Get the token from localStorage or wherever you store it after admin login
+      const token = localStorage.getItem('adminToken');
+      
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/bookings/${id}`, 
+        { status },
+        {
+          headers: {
+            'x-auth-token': token
+          }
+        }
+      );
+      
       // Update local state to reflect the change
       setBookings(bookings.map(booking => 
         booking._id === id ? { ...booking, status } : booking
       ));
     } catch (err) {
+      console.error('Error updating booking status:', err.response?.data || err.message);
       alert('Failed to update booking status. Please try again.');
-      console.error('Error updating booking status:', err);
     }
   };
 
