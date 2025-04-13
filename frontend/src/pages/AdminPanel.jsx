@@ -21,7 +21,7 @@ const AdminPanel = () => {
       // Get the token from localStorage or wherever you store it after admin login
       const token = localStorage.getItem('adminToken');
       
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/bookings`,
+      const response = await axios.get(`${import.meta.env.NEW_BACKEND_URL_V}/bookings`,
           
         //`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/bookings`, 
         {
@@ -54,7 +54,7 @@ const AdminPanel = () => {
       const token = localStorage.getItem('adminToken');
       
       await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/bookings/${id}`, 
+        `${import.meta.env.NEW_BACKEND_URL_V}/bookings/${id}`, 
         { status },
         {
           headers: {
