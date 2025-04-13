@@ -17,12 +17,26 @@ const AdminPanel = () => {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/bookings');
-      setBookings(response.data);
-      setError(null);
+     // const response = await axios.get(import.meta.env.VITE_BACKEND_URL + '/bookings');
+     const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/bookings`);
+      
+      // Check if response.data is an array before setting state
+      if (Array.isArray(response.data)) {
+        setBookings(response.data);
+      } else {
+        console.error('Expected array but got:', response.data);
+        // If we received an error object instead of bookings array
+        if (response.data && response.data.message) {
+          setError(response.data.message);
+        } else {
+          setError('Received unexpected data format from server');
+        }
+        setBookings([]); // Initialize with empty array
+      }
     } catch (err) {
       setError('Failed to fetch bookings. Please try again.');
       console.error('Error fetching bookings:', err);
+      setBookings([]); // Reset to empty array on error
     } finally {
       setLoading(false);
     }
@@ -45,6 +59,10 @@ const AdminPanel = () => {
     if (filter === 'all') return true;
     return booking.status === filter;
   });
+
+  useEffect(() => {
+    console.log("Bookings type:", typeof bookings, bookings);
+  }, [bookings]);
 
   const getStatusColor = (status) => {
     switch(status) {
