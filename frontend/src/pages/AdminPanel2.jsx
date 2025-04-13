@@ -351,8 +351,6 @@ const AdminPanel2 = () => {
     <>
       <Header />
 
-      <Link to="/">Go to All Appointments Page</Link>
-
       <div className="min-h-screen bg-gray-100 py-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="bg-white shadow-md rounded-lg p-6 mb-8">
