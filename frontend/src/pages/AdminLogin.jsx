@@ -28,7 +28,7 @@ const AdminLogin = () => {
     
     try {
       //const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL ||  'http://localhost:4000'}/admin/login` , credentials);
-       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/admin/login`, credentials);
+       const response = await axios.post(`${import.meta.env.NEW_BACKEND_URL_V}/admin/login`, credentials);
 
 
       // Store the token in localStorage
