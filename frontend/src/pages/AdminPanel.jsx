@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Check, X, RefreshCw, Calendar, Clock, User, Phone, Mail, FileText, DollarSign } from 'lucide-react';
 import Header from './components/Header';
 import AdminPanel2 from './AdminPanel2';
+import { Link } from 'react-router-dom';
+
 
 const AdminPanel = () => {
   const [bookings, setBookings] = useState([]);
@@ -102,7 +104,16 @@ const AdminPanel = () => {
    
 
       <Header />
-      
+              <div className="flex justify-center mt-6">
+          <Link
+            to="/AdminPanel2"
+            className="bg-pink-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all duration-200 text-center"
+          >
+            Edit Services and Packages
+          </Link>
+        </div>
+
+
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center mb-6">

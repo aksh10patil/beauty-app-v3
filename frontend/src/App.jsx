@@ -9,6 +9,8 @@ import Contact from "./pages/Contact";
 import AdminPanel from "./pages/AdminPanel"
 // import ProtectedRoute from './pages/ProtectedRoute';
 import AdminLogin from './pages/AdminLogin';
+import AdminPanel2 from './pages/AdminPanel2';
+
 
 
 
@@ -36,7 +38,7 @@ export default function App() {
             <Route path="/Appointment" element={<Appointment />} />
             <Route path="/Contact" element={<Contact />} />
             <Route path="/Login" element={<AdminLogin />} />
-
+         
             <Route path="/Services" element={<Services cart={cart} setCart={setCart} />} />
                   <Route 
                 path="/checkout" 
@@ -51,6 +53,8 @@ export default function App() {
                               </ProtectedRoute>
                             } 
                   />
+                  <Route path="/AdminPanel2" element={<AdminPanel2 />} />
+
           </Routes>
       </>
   )
