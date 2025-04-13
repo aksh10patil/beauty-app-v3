@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Check, X, RefreshCw, Calendar, Clock, User, Phone, Mail, FileText, DollarSign } from 'lucide-react';
 import Header from './components/Header';
-import AdminPanel from './AdminPanel2';
+import AdminPanel2 from './AdminPanel2';
 
-const AdminDashboard = () => {
+const AdminPanel = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,7 +63,10 @@ const AdminDashboard = () => {
 
   return (
     <>
+   
+
       <Header />
+      
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center mb-6">

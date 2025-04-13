@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Save, PlusCircle, Trash2, ChevronDown, ChevronUp, Upload, Image as ImageIcon } from 'lucide-react';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import { Link } from 'react-router-dom';
 
-const AdminPanel = () => {
+const AdminPanel2 = () => {
   const [services, setServices] = useState([]);
   const [expandedService, setExpandedService] = useState(null);
   const [expandedOption, setExpandedOption] = useState(null);
@@ -349,6 +350,9 @@ const AdminPanel = () => {
   return (
     <>
       <Header />
+
+      <Link to="/">Go to All Appointments Page</Link>
+
       <div className="min-h-screen bg-gray-100 py-8">
         <div className="max-w-6xl mx-auto px-4">
           <div className="bg-white shadow-md rounded-lg p-6 mb-8">
@@ -639,4 +643,4 @@ const AdminPanel = () => {
   );
 };
 
-export default AdminPanel;
+export default AdminPanel2;

@@ -27,13 +27,13 @@ const AdminLogin = () => {
     setLoading(true);
     
     try {
-      const response = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/admin/login', credentials);
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL ||  'http://localhost:4000'}/admin/login` , credentials);
       
       // Store the token in localStorage
       localStorage.setItem('adminToken', response.data.token);
       
-      // Redirect to admin dashboard
-      navigate('/admin/dashboard');
+      // Redirect to admin appointments
+      navigate('/admin/appointments');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
       console.error('Login error:', err);
