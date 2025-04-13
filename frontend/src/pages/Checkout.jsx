@@ -178,7 +178,7 @@ const whatsapplink = () => {
     };
 
     // Save booking to database
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/bookings`, bookingData);
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/bookings`, bookingData);
     
     // If successful, update UI
     console.log('Booking saved:', response.data);

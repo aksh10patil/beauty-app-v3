@@ -6,7 +6,7 @@ import Appointment from "./pages/Appointment";
 import Services from "./pages/Services";
 import Checkout from "./pages/Checkout";
 import Contact from "./pages/Contact";
-import AdminPanel from './pages/AdminPanel';
+import AdminPanel from "./pages/AdminPanel"
 // import ProtectedRoute from './pages/ProtectedRoute';
 import AdminLogin from './pages/AdminLogin';
 
@@ -44,7 +44,7 @@ export default function App() {
               />
                   <Route path="/admin/login" element={<AdminLogin />} />
                           <Route 
-                            path="/admin/dashboard" 
+                            path="/admin/appointments" 
                             element={
                               <ProtectedRoute>
                                 <AdminPanel />
