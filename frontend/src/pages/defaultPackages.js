@@ -2,7 +2,7 @@
 export const defaultPackages = [
     {
         id: 1,
-        name: "Normal Package",
+        name: "not Normal Package",
         description: "Basic treatment options for those who want essential services.",
         price: 2500,
         image: "/api/placeholder/400/300",
