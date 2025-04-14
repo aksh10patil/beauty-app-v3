@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import { ShoppingCart, Plus, Package2, Package } from 'lucide-react';
+import { ShoppingCart, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-
+// Change this to match your backend URL
+const API_URL = 'https://beauty-app-v3-9yge.onrender.com/api';
 
 const ServicesAndPackages = ({ cart = [], setCart }) => {
     const navigate = useNavigate();
@@ -13,38 +15,31 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
     const [packages, setPackages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Load services and packages from localStorage or use defaults
+    // Fetch services and packages from API instead of localStorage
     useEffect(() => {
-        try {
-            // Load services
-            const savedServices = localStorage.getItem('spaServices');
-            if (savedServices) {
-                setServices(JSON.parse(savedServices));
-            } else {
-                setServices(defaultServices);
-                localStorage.setItem('spaServices', JSON.stringify(defaultServices));
+        const fetchData = async () => {
+            try {
+                // Fetch services
+                const servicesResponse = await axios.get(`${API_URL}/services`);
+                setServices(servicesResponse.data);
+                
+                // Fetch packages
+                const packagesResponse = await axios.get(`${API_URL}/packages`);
+                setPackages(packagesResponse.data);
+            } catch (error) {
+                console.error("Error loading data:", error);
+                // You could set default data here if API fails
+            } finally {
+                setIsLoading(false);
             }
-
-            // Load packages
-            const savedPackages = localStorage.getItem('spaPackages');
-            if (savedPackages) {
-                setPackages(JSON.parse(savedPackages));
-            } else {
-                setPackages(defaultPackages);
-                localStorage.setItem('spaPackages', JSON.stringify(defaultPackages));
-            }
-        } catch (error) {
-            console.error("Error loading data:", error);
-            setServices(defaultServices);
-            setPackages(defaultPackages);
-        } finally {
-            setIsLoading(false);
-        }
+        };
+        
+        fetchData();
     }, []);
 
     const addServiceToCart = (service, option) => {
         const cartItem = {
-            id: `${service.id}-${option.id}`,
+            id: `${service._id}-${option._id || service.options.indexOf(option)}`,
             serviceName: service.name,
             optionName: option.name,
             price: option.price
@@ -55,7 +50,7 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
 
     const addPackageToCart = (pkg) => {
         const cartItem = {
-            id: `package-${pkg.id}`,
+            id: `package-${pkg._id}`,
             serviceName: `${pkg.name} Package`,
             optionName: "Complete Package",
             price: pkg.price
@@ -107,6 +102,10 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
         return classes[color] || classes.blue;
     };
 
+    const handleImageError = (e) => {
+        e.target.src = 'https://via.placeholder.com/400x300';
+    };
+
     if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center">Loading content...</div>;
     }
@@ -126,11 +125,12 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
                 <section className="max-w-6xl mx-auto py-16 px-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {services.map(service => (
-                            <article key={service.id} className="bg-white rounded-lg shadow-md overflow-hidden transition transform hover:-translate-y-1 hover:shadow-lg">
+                            <article key={service._id} className="bg-white rounded-lg shadow-md overflow-hidden transition transform hover:-translate-y-1 hover:shadow-lg">
                                 <img
-                                    src={service.image}
+                                    src={service.image.startsWith('http') ? service.image : `${API_URL}${service.image}`}
                                     alt={service.name}
                                     className="w-full h-48 object-cover"
+                                    onError={handleImageError}
                                 />
                                 <div className="p-6">
                                     <h2 className="text-2xl font-bold text-gray-800 mb-2">{service.name}</h2>
@@ -138,8 +138,8 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
 
                                     <h3 className="text-lg font-semibold text-gray-700 mb-3">Options & Pricing</h3>
                                     <ul className="space-y-3">
-                                        {service.options.map(option => (
-                                            <li key={option.id} className="flex justify-between items-center border-b pb-2">
+                                        {service.options && service.options.map((option, index) => (
+                                            <li key={index} className="flex justify-between items-center border-b pb-2">
                                                 <span>{option.name}</span>
                                                 <div className="flex items-center">
                                                     <span className="font-medium mr-3">₹{option.price}</span>
@@ -174,7 +174,7 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
                             const colorClasses = getColorClasses(pkg.color);
                             return (
                                 <article 
-                                    key={pkg.id} 
+                                    key={pkg._id} 
                                     className={`bg-white rounded-lg shadow-md overflow-hidden transition transform hover:-translate-y-1 hover:shadow-lg relative ${pkg.isPopular ? `border-t-4 ${colorClasses.border}` : ''}`}
                                 >
                                     {pkg.isPopular && (
@@ -183,9 +183,10 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
                                         </div>
                                     )}
                                     <img
-                                        src={pkg.image}
+                                        src={pkg.image.startsWith('http') ? pkg.image : `${API_URL}${pkg.image}`}
                                         alt={pkg.name}
                                         className="w-full h-48 object-cover"
+                                        onError={handleImageError}
                                     />
                                     <div className="p-6">
                                         <h2 className={`text-2xl font-bold mb-2 ${colorClasses.text}`}>{pkg.name}</h2>
