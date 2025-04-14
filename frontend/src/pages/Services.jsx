@@ -4,9 +4,6 @@ import Footer from './components/Footer';
 import { ShoppingCart, Plus, Package2, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-// Import default services data as a fallback
-import { defaultServices } from './defaultServicesData';
-import { defaultPackages } from './defaultPackages';
 
 
 const ServicesAndPackages = ({ cart = [], setCart }) => {
