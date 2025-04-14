@@ -6,7 +6,7 @@ import bodymassagepg from '../assets/bodymassagepg.webp'
 export const defaultServices = [
     {
         id: 1,
-        name: "Hair Styling",
+        name: "Hair Curling",
         description: "Professional hair styling services for all hair types and preferences.",
         image: pcarousel5,
         options: [
