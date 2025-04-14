@@ -5,7 +5,7 @@ import Footer from './components/Footer';
 import axios from 'axios'; // Make sure axios is installed
 
 // const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
-const API_URL = 'http://localhost:4000/api';
+const API_URL = 'https://beauty-app-v3-9yge.onrender.com/api';
 
 const AdminPanel2 = () => {
   const [services, setServices] = useState([]);
