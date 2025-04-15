@@ -7,6 +7,7 @@ import axios from 'axios';
 
 // Change this to match your backend URL
 const API_URL = 'https://beauty-app-v3-9yge.onrender.com/api';
+const BASE_URL = API_URL.replace('/api', '');
 
 const ServicesAndPackages = ({ cart = [], setCart }) => {
     const navigate = useNavigate();
@@ -127,7 +128,7 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
                         {services.map(service => (
                             <article key={service._id} className="bg-white rounded-lg shadow-md overflow-hidden transition transform hover:-translate-y-1 hover:shadow-lg">
                                 <img
-                                    src={service.image.startsWith('http') ? service.image : `${API_URL}${service.image}`}
+                                    src={service.image.startsWith('http') ? service.image : `${BASE_URL}${service.image}`}
                                     alt={service.name}
                                     className="w-full h-48 object-cover"
                                     onError={handleImageError}
