@@ -17,8 +17,9 @@ Welcome to the **Beauty Salon Project** — a full-featured salon management app
 ```bash
 git clone https://github.com/yourusername/beauty-salon.git
 cd beauty-salon
-npm install
-npm start
+IN BACKEND npm install
+IN FRONTEND npm install
+npm run dev in both frontend and backend folders
 
 
 DB_CONNECTION=
