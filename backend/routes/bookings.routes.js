@@ -51,4 +51,15 @@ router.put('/bookings/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// Delete all bookings (protected route for admin)
+router.delete('/bookings', authMiddleware, async (req, res) => {
+  try {
+    await Booking.deleteMany({});
+    res.json({ message: 'All bookings successfully deleted' });
+  } catch (error) {
+    console.error('Error deleting all bookings:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 module.exports = router;

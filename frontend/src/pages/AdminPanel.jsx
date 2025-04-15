@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Check, X, RefreshCw, Calendar, Clock, User, Phone, Mail, FileText, DollarSign } from 'lucide-react';
+import { Check, X, RefreshCw, Calendar, Clock, User, Phone, Mail, FileText, DollarSign, Trash2 } from 'lucide-react';
 import Header from './components/Header';
 import AdminPanel2 from './AdminPanel2';
 import { Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all'); // all, pending, accepted, rejected
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     fetchBookings();
@@ -75,6 +76,32 @@ const AdminPanel = () => {
     }
   };
 
+  const deleteAllBookings = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      
+      await axios.delete(
+        'https://beauty-app-v3-9yge.onrender.com/bookings',
+        {
+          headers: {
+            'x-auth-token': token
+          }
+        }
+      );
+      
+      // Clear local state
+      setBookings([]);
+      setShowDeleteConfirmation(false);
+      alert('All appointments have been successfully deleted');
+    } catch (err) {
+      console.error('Error deleting all bookings:', err.response?.data || err.message);
+      alert('Failed to delete bookings. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredBookings = bookings.filter(booking => {
     if (filter === 'all') return true;
     return booking.status === filter;
@@ -101,18 +128,48 @@ const AdminPanel = () => {
 
   return (
     <>
-   
-
       <Header />
-              <div className="flex justify-center mt-6">
-          <Link
-            to="/AdminPanel2"
-            className="bg-pink-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all duration-200 text-center"
-          >
-            Edit Services and Packages
-          </Link>
-        </div>
+      <div className="flex justify-center mt-6 space-x-4">
+        <Link
+          to="/AdminPanel2"
+          className="bg-pink-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-all duration-200 text-center"
+        >
+          Edit Services and Packages
+        </Link>
+        <button
+          onClick={() => setShowDeleteConfirmation(true)}
+          className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-all duration-200 flex items-center"
+        >
+          <Trash2 size={18} className="mr-2" />
+          Delete All Appointments
+        </button>
+      </div>
 
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Confirm Deletion</h3>
+            <p className="text-gray-700 mb-6">
+              Are you sure you want to delete all appointments? This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowDeleteConfirmation(false)}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={deleteAllBookings}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Delete All
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-6xl mx-auto px-4">
