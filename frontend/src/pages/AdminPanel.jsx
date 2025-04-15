@@ -82,7 +82,7 @@ const AdminPanel = () => {
       const token = localStorage.getItem('adminToken');
       
       await axios.delete(
-        'https://beauty-app-v3-9yge.onrender.com/bookings',
+       `https://beauty-app-v3-9yge.onrender.com/bookings/`,
         {
           headers: {
             'x-auth-token': token
