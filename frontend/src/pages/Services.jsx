@@ -9,6 +9,9 @@ import axios from 'axios';
 const API_URL = 'https://beauty-app-v3-9yge.onrender.com/api';
 const BASE_URL = API_URL.replace('/api', '');
 
+// Default fallback image - consider storing this locally in your assets folder
+const FALLBACK_IMAGE = '/assets/placeholder.jpg'; // Fallback to local image
+
 const ServicesAndPackages = ({ cart = [], setCart }) => {
     const navigate = useNavigate();
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -104,7 +107,10 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
     };
 
     const handleImageError = (e) => {
-        e.target.src = 'https://via.placeholder.com/400x300';
+        // Remove the error handler to prevent infinite loops
+        e.target.onerror = null;
+        // Set to local fallback image
+        e.target.src = FALLBACK_IMAGE;
     };
 
     if (isLoading) {
@@ -128,7 +134,7 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
                         {services.map(service => (
                             <article key={service._id} className="bg-white rounded-lg shadow-md overflow-hidden transition transform hover:-translate-y-1 hover:shadow-lg">
                                 <img
-                                    src={service.image.startsWith('http') ? service.image : `${BASE_URL}${service.image}`}
+                                    src={service.image && service.image.startsWith('http') ? service.image : service.image ? `${BASE_URL}${service.image}` : FALLBACK_IMAGE}
                                     alt={service.name}
                                     className="w-full h-48 object-cover"
                                     onError={handleImageError}
@@ -184,7 +190,7 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
                                         </div>
                                     )}
                                     <img
-                                        src={pkg.image.startsWith('http') ? pkg.image : `${API_URL}${pkg.image}`}
+                                        src={pkg.image && pkg.image.startsWith('http') ? pkg.image : pkg.image ? `${BASE_URL}${pkg.image}` : FALLBACK_IMAGE}
                                         alt={pkg.name}
                                         className="w-full h-48 object-cover"
                                         onError={handleImageError}
