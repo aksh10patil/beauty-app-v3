@@ -101,7 +101,7 @@ const whatsapplink = () => {
       //import env here backend - render  
       // using localhost 4000 to run locally 
     //  const orderResponse = await axios.post( 'http://localhost:4000/api'  + 'api/create-order', {
-      const orderResponse = await axios.post( 'https://beauty-app-v3-9yge.onrender.com/api/create-order', {
+      const orderResponse = await axios.post( 'https://beauty-app-v3-9yge.onrender.com/create-order', {
         courseId: Math.floor(Math.random() * 10), // You can modify this as needed
         amount: total
       });
@@ -118,7 +118,7 @@ const whatsapplink = () => {
         handler: async function (response) {
           try {
             // Verify payment
-           const verifyResponse = await axios.post( 'https://beauty-app-v3-9yge.onrender.com'  + 'api/verifyPayment', {
+           const verifyResponse = await axios.post( 'https://beauty-app-v3-9yge.onrender.com/verifyPayment', {
             //const verifyResponse = await axios.post(`${import.meta.env.NEW_BACKEND_URL_V}api/verifyPayment`, {
               order_id: order_id,
               payment_Id: response.razorpay_payment_id,
