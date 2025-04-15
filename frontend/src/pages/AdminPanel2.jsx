@@ -310,7 +310,7 @@ const AdminPanel2 = () => {
   const handleImageUpload = async (e, id, type) => {
     const file = e.target.files[0];
     if (!file) return;
-
+  
     try {
       const formData = new FormData();
       formData.append('image', file);
@@ -323,11 +323,19 @@ const AdminPanel2 = () => {
           },
         });
         
-        const updatedService = services.find(s => s._id === id);
-        if (updatedService) {
-          updatedService.image = response.data.imageUrl;
-          setServices([...services.filter(s => s._id !== id), updatedService]);
-        }
+        // Get the image URL from response
+        const imageUrl = response.data.imageUrl;
+        
+        // Update the service with the new image URL
+        const updatedService = { ...services.find(s => s._id === id), image: imageUrl };
+        
+        // First update the service in the database to ensure consistency
+        await axios.put(`${API_URL}/services/${id}`, updatedService);
+        
+        // Then update the local state, preserving order
+        setServices(services.map(s => s._id === id ? updatedService : s));
+        
+        showMessage('Image updated successfully!', 'success');
       } else if (type === 'package') {
         response = await axios.post(`${API_URL}/packages/upload/${id}`, formData, {
           headers: {
