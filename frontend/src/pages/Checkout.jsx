@@ -401,12 +401,12 @@ const whatsapplink = () => {
                           name="time"
                           value={formData.time}
                           onChange={handleInputChange}
-                          min="09:00"
-                          max="18:00"
+                          min="10:00"
+                          max="15:30"
                           className={`w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-pink-300 ${errors.time ? 'border-red-500' : ''}`}
                         />
                         {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
-                        <p className="text-xs text-gray-500 mt-1">Business hours: 9:00 AM - 6:00 PM</p>
+                        <p className="text-xs text-black mt-1">Business hours: 10:00 AM - 3:30 PM</p>
                       </div>
                       <div className="md:col-span-2">
                         <label className="block text-gray-700 mb-1">Payment Method *</label>
