@@ -155,6 +155,28 @@ const whatsapplink = () => {
     }
   };
 
+  // Function to send SMS notifications using Twilio
+  const sendSmsNotifications = async (bookingDetails) => {
+    try {
+      // Send booking notifications via SMS to salon owner and customer
+      await axios.post('https://beauty-app-v3-9yge.onrender.com/send-sms-notifications', {
+        customerName: bookingDetails.customer.name,
+        customerPhone: bookingDetails.customer.phone,
+        appointmentDate: bookingDetails.appointment.date,
+        appointmentTime: bookingDetails.appointment.time,
+        services: bookingDetails.services,
+        total: bookingDetails.total,
+        paymentMethod: bookingDetails.paymentMethod
+      });
+      
+      console.log('SMS notifications sent successfully');
+    } catch (error) {
+      console.error('Error sending SMS notifications:', error);
+      // Don't alert user here - we don't want to disrupt successful booking flow
+      // Just log the error
+    }
+  };
+
   const completeBooking = async () => {
   try {
     // Prepare booking data
@@ -180,7 +202,7 @@ const whatsapplink = () => {
     };
 
     // Save booking to database
-    const response = await axios.post( 'https://beauty-app-v3-9yge.onrender.com/bookings', bookingData);
+    const response = await axios.post('https://beauty-app-v3-9yge.onrender.com/bookings', bookingData);
     
     // If successful, update UI
     console.log('Booking saved:', response.data);
@@ -188,6 +210,9 @@ const whatsapplink = () => {
     // Save cart items and total before clearing the cart
     setSavedCartItems([...cart]);
     setSavedTotal(getCartTotal());
+
+    // Send SMS notifications
+    await sendSmsNotifications(bookingData);
 
     setIsSubmitting(false);
     setSubmitted(true);
@@ -239,6 +264,9 @@ const whatsapplink = () => {
               <h1 className="text-3xl font-bold text-gray-800">Booking Confirmed!</h1>
               <p className="text-gray-600 mt-2">
                 We've sent a confirmation email to {formData.email}
+              </p>
+              <p className="text-gray-500 mt-2">
+                A confirmation SMS has also been sent to your phone number
               </p>
               <p className="text-sm text-gray-500 mt-1">
                 Booking reference: {Math.random().toString(36).substring(2, 10).toUpperCase()}
@@ -421,7 +449,7 @@ const whatsapplink = () => {
                               className="mr-2"
                             />
                             Pay with Card
-                             / Upi / NetBanking
+                             / UPI / NetBanking
                           </label>
                           <label className={`border rounded p-3 flex items-center cursor-pointer ${formData.paymentMethod === 'cash' ? 'border-pink-500 bg-pink-50' : ''}`}>
                             <input

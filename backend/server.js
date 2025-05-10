@@ -6,6 +6,7 @@ const bookingRouter = require("./routes/bookings.routes");
 const adminRouter = require("./routes/admin.routes");
 const packageRouter = require("./routes/packageRoutes");
 const serviceRouter = require("./routes/serviceRoutes");
+const smsRoutes = require('./routes/wproute');
 const connectDB = require("./config/db");
 require("dotenv").config();
 
@@ -26,6 +27,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/', paymentRouter);
 app.use('/', bookingRouter);
 app.use('/', adminRouter);
+app.use('/', smsRoutes);
 app.use('/api/packages', packageRouter);
 app.use('/api/services', serviceRouter);
 
