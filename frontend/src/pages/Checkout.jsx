@@ -155,11 +155,13 @@ const whatsapplink = () => {
     }
   };
 
+  //http://localhost:4000/
+
   // Function to send SMS notifications using Twilio
   const sendSmsNotifications = async (bookingDetails) => {
     try {
       // Send booking notifications via SMS to salon owner and customer
-      await axios.post('https://beauty-app-v3-9yge.onrender.com/send-sms-notifications', {
+      await axios.post('http://localhost:4000/send-sms-notifications', {
         customerName: bookingDetails.customer.name,
         customerPhone: bookingDetails.customer.phone,
         appointmentDate: bookingDetails.appointment.date,
