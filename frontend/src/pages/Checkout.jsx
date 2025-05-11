@@ -100,8 +100,12 @@ const whatsapplink = () => {
       // Create order
       //import env here backend - render  
       // using localhost 4000 to run locally 
-    //  const orderResponse = await axios.post( 'http://localhost:4000/api'  + 'api/create-order', {
-      const orderResponse = await axios.post( 'https://beauty-app-v3-9yge.onrender.com/create-order', {
+     //  'https://beauty-app-v3-9yge.onrender.com/create-order'
+
+
+
+
+      const orderResponse = await axios.post( `${import.meta.env.VITE_BACKEND_URL ||  'http://localhost:4000'}create-order` , {
         courseId: Math.floor(Math.random() * 10), // You can modify this as needed
         amount: total
       });
@@ -118,8 +122,8 @@ const whatsapplink = () => {
         handler: async function (response) {
           try {
             // Verify payment
-           const verifyResponse = await axios.post( 'https://beauty-app-v3-9yge.onrender.com/verifyPayment', {
-            //const verifyResponse = await axios.post(`${import.meta.env.NEW_BACKEND_URL_V}api/verifyPayment`, {
+           //const verifyResponse = await axios.post( 'https://beauty-app-v3-9yge.onrender.com/verifyPayment', {
+            const verifyResponse = await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/verifyPayment`, {
               order_id: order_id,
               payment_Id: response.razorpay_payment_id,
               signature: response.razorpay_signature
@@ -158,10 +162,11 @@ const whatsapplink = () => {
   //http://localhost:4000/
 
   // Function to send SMS notifications using Twilio
+  //'http://localhost:4000/send-sms-notifications'
   const sendSmsNotifications = async (bookingDetails) => {
     try {
       // Send booking notifications via SMS to salon owner and customer
-      await axios.post('http://localhost:4000/send-sms-notifications', {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL ||  'http://localhost:4000'}/send-sms-notifications`, {
         customerName: bookingDetails.customer.name,
         customerPhone: bookingDetails.customer.phone,
         appointmentDate: bookingDetails.appointment.date,
@@ -202,9 +207,9 @@ const whatsapplink = () => {
       paymentMethod: formData.paymentMethod,
       status: 'pending'
     };
-
+    // 'https://beauty-app-v3-9yge.onrender.com/bookings'
     // Save booking to database
-    const response = await axios.post('https://beauty-app-v3-9yge.onrender.com/bookings', bookingData);
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL ||  'http://localhost:4000'}/bookings`, bookingData);
     
     // If successful, update UI
     console.log('Booking saved:', response.data);

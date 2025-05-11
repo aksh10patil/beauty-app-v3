@@ -27,8 +27,8 @@ const AdminLogin = () => {
     setLoading(true);
     
     try {
-      //const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL ||  'http://localhost:4000'}/admin/login` , credentials);
-       const response = await axios.post(`https://beauty-app-v3-9yge.onrender.com/admin/login`, credentials);
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL ||  'http://localhost:4000'}/admin/login` , credentials);
+      // const response = await axios.post(`https://beauty-app-v3-9yge.onrender.com/admin/login`, credentials);
 
 
       // Store the token in localStorage

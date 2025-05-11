@@ -9,8 +9,10 @@ import img2 from '../assets/img2.jpeg';
 import img3 from '../assets/img3.jpeg';
 import img4 from '../assets/img4.jpeg';
 
+
 // Change this to match your backend URL
-const API_URL = 'https://beauty-app-v3-9yge.onrender.com/api';
+const API_URL = process.env.REACT_APP_API_URL;
+
 
 // Local images from assets folder
 const packageImages = [img1, img2, img3, img4];
