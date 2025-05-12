@@ -11,7 +11,9 @@ import img4 from '../assets/img4.jpeg';
 
 
 // Change this to match your backend URL
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = import.meta.env.REACT_APP_API_URL;
+
+
 
 
 // Local images from assets folder
