@@ -29,38 +29,83 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
 
     // Fetch services and packages from API
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Fetch services
-                const servicesResponse = await axios.get(`${API_URL}/services`);
-                setServices(servicesResponse.data);
-                
-                // Fetch packages and assign unique images
-                const packagesResponse = await axios.get(`${API_URL}/packages`);
-                
-                // Create a shuffled copy of packageImages array
-                const shuffledImages = [...packageImages].sort(() => Math.random() - 0.5);
-                
-                // Assign a unique image to each package (cycling through if there are more packages than images)
-                const packagesWithImages = packagesResponse.data.map((pkg, index) => {
-                    return {
-                        ...pkg,
-                        localImage: shuffledImages[index % shuffledImages.length]
-                    };
-                });
-                
-                setPackages(packagesWithImages);
-            } catch (error) {
-                console.error("Error loading data:", error);
-            } finally {
-                setIsLoading(false);
+        // Manually defined services
+        const dummyServices = [
+            {
+                _id: 'srv1',
+                name: 'Hair Spa',
+                description: 'Relaxing and rejuvenating hair spa treatment',
+                price: 799
+            },
+            {
+                _id: 'srv2',
+                name: 'Facial Cleanup',
+                description: 'Glow-boosting facial cleanup for all skin types',
+                price: 499
+            },
+            {
+                _id: 'srv3',
+                name: 'Manicure & Pedicure',
+                description: 'Complete nail and hand-foot care',
+                price: 999
             }
-        };
-        
-        fetchData();
+        ];
+    
+        // Manually defined packages
+        const dummyPackages = [
+            {
+              _id: 'pkg1',
+              name: 'Glow Up Package',
+              description: 'Unleash your natural radiance with our glow-enhancing trio designed for instant charm.',
+              price: 1499,
+              features: ['Facial Cleanup', 'Manicure', 'Pedicure'],
+              color: 'pink',
+              isPopular: true
+            },
+            {
+              _id: 'pkg2',
+              name: 'Relax & Renew',
+              description: 'Melt away stress and recharge your senses with this calming, spa-inspired combo.',
+              price: 1299,
+              features: ['Hair Spa', 'Body Massage', 'Aromatherapy'],
+              color: 'purple',
+              isPopular: false
+            },
+            {
+              _id: 'pkg3',
+              name: 'Bridal Bliss',
+              description: 'Crafted for the bride-to-be — this ritual preps you for that unforgettable spotlight moment.',
+              price: 1999,
+              features: ['Hair Spa', 'Facial Cleanup', 'Bridal Nail Art'],
+              color: 'green',
+              isPopular: true
+            },
+            {
+              _id: 'pkg4',
+              name: 'Complete Rejuvenation',
+              description: 'A luxurious head-to-toe reset designed to refresh, detox, and uplift your entire vibe.',
+              price: 1999,
+              features: ['Detox Facial', 'Foot Reflexology', 'Hot Oil Hair Treatment'],
+              color: 'blue',
+              isPopular: true
+            }
+          ];
+          
+    
+        // Shuffle and assign local images to dummyPackages
+        const shuffledImages = [...packageImages].sort(() => Math.random() - 0.5);
+        const packagesWithImages = dummyPackages.map((pkg, index) => ({
+            ...pkg,
+            localImage: shuffledImages[index % shuffledImages.length]
+        }));
+    
+        // Set state
+        setServices(dummyServices);
+        setPackages(packagesWithImages);
+        setIsLoading(false);
     }, []);
-
-
+    
+    
 
     const addPackageToCart = (pkg) => {
         const cartItem = {
@@ -139,43 +184,48 @@ const ServicesAndPackages = ({ cart = [], setCart }) => {
                             const colorClasses = getColorClasses(pkg.color);
                             return (
                                 <article 
-                                    key={pkg._id} 
-                                    className={`bg-white rounded-lg shadow-md overflow-hidden transition transform hover:-translate-y-1 hover:shadow-lg relative ${pkg.isPopular ? `border-t-4 ${colorClasses.border}` : ''}`}
-                                >
-                                    {pkg.isPopular && (
-                                        <div className="absolute top-0 right-0 bg-yellow-400 text-xs font-bold uppercase py-1 px-4 transform rotate-45 translate-x-7 translate-y-3 text-gray-800">
-                                            Most Popular
-                                        </div>
-                                    )}
-                                    <img
-                                        src={pkg.localImage}
-                                        alt={pkg.name}
-                                        className="w-full h-48 object-cover"
-                                    />
-                                    <div className="p-6">
-                                        <h2 className={`text-2xl font-bold mb-2 ${colorClasses.text}`}>{pkg.name}</h2>
-                                        <div className="text-3xl font-bold my-4">₹{pkg.price}</div>
-                                        <p className="text-gray-600 mb-6">{pkg.description}</p>
-
-                                        <h3 className="text-lg font-semibold text-gray-700 mb-3">Features</h3>
-                                        <ul className="space-y-3 mb-6">
-                                            {(pkg.features || []).map((feature, index) => (
-                                                <li key={index} className="flex items-start">
-                                                    <span className="text-green-500 mr-2">✓</span>
-                                                    <span>{feature}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        
-                                        <button
-                                            onClick={() => addPackageToCart(pkg)}
-                                            className={`w-full py-3 text-white font-semibold rounded transition ${colorClasses.bg} ${colorClasses.hover}`}
-                                            aria-label={`Select ${pkg.name}`}
-                                        >
-                                            Select Package
-                                        </button>
-                                    </div>
-                                </article>
+                                key={pkg._id} 
+                                className={`flex flex-col bg-white rounded-lg shadow-md overflow-hidden transition transform hover:-translate-y-1 hover:shadow-lg relative ${pkg.isPopular ? `border-t-4 ${colorClasses.border}` : ''}`}
+                              >
+                                {pkg.isPopular && (
+                                  <div className="absolute top-0 right-0 bg-yellow-400 text-xs font-bold uppercase py-1 px-4 transform rotate-45 translate-x-7 translate-y-3 text-gray-800">
+                                    Most Popular
+                                  </div>
+                                )}
+                              
+                                <img
+                                  src={pkg.localImage}
+                                  alt={pkg.name}
+                                  className="w-full h-48 object-cover"
+                                />
+                              
+                                <div className="p-6 flex flex-col flex-grow">
+                                  <h2 className={`text-2xl font-bold mb-2 ${colorClasses.text}`}>{pkg.name}</h2>
+                                  <div className="text-3xl font-bold my-4">₹{pkg.price}</div>
+                                  <p className="text-gray-600 mb-6">{pkg.description}</p>
+                              
+                                  <h3 className="text-lg font-semibold text-gray-700 mb-3">Features</h3>
+                                  <ul className="space-y-3 mb-6">
+                                    {(pkg.features || []).map((feature, index) => (
+                                      <li key={index} className="flex items-start">
+                                        <span className="text-green-500 mr-2">✓</span>
+                                        <span>{feature}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                              
+                                  <div className="mt-auto">
+                                    <button
+                                      onClick={() => addPackageToCart(pkg)}
+                                      className={`w-full py-3 text-white font-semibold rounded transition ${colorClasses.bg} ${colorClasses.hover}`}
+                                      aria-label={`Select ${pkg.name}`}
+                                    >
+                                      Select Package
+                                    </button>
+                                  </div>
+                                </div>
+                              </article>
+                              
                             );
                         })}
                     </div>
