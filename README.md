@@ -36,3 +36,4 @@ tests/        # Unit & integration tests
 # Saloon-app
 # Saloon-app
 # beauty-app-AWS
+# beauty-app-AWS
