@@ -35,3 +35,4 @@ docs/         # API & project documentation
 tests/        # Unit & integration tests  
 # Saloon-app
 # Saloon-app
+# beauty-app-AWS
